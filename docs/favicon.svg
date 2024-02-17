@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2b2b2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
-	<circle cx="12" cy="12" r="8" stroke="none" fill="#AA95B1" />
-	<g transform="scale(0.5) translate(13.0 10.5)">
+	<circle cx="12" cy="12" r="12" stroke="none" fill="#AA95B1" />
+	<g transform="scale(0.8) translate(4.0 1.8)">
 		<g transform="rotate(35 12 12)" stroke="#2C1320">
 			<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2">
 			</path>
