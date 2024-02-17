@@ -1,0 +1,4 @@
+dist/
+libs/
+docs/
+vite.config.js
