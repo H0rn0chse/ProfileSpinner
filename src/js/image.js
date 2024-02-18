@@ -4,18 +4,28 @@ function canvasToBlob (canvas) {
   });
 }
 
-let canvas;
-function getCanvas () {
-  if (!canvas) {
+let sharedCanvas;
+function getCanvas (createNew) {
+  let canvas;
+  if (createNew) {
     canvas = document.createElement("canvas");
-    canvas.style.position = "fixed";
-    canvas.style.right = 0;
-    canvas.style.bottom = 0;
-    canvas.style.borderColor = "red";
-    canvas.style.borderWidth = "1px";
-    canvas.style.borderStyle = "solid";
-    // document.body.appendChild(canvas);
+  } else {
+    if (!sharedCanvas) {
+      canvas = document.createElement("canvas");
+    } else {
+      canvas = sharedCanvas;
+    }
   }
+
+  // debug settings
+  canvas.style.position = "fixed";
+  canvas.style.right = 0;
+  canvas.style.bottom = 0;
+  canvas.style.borderColor = "red";
+  canvas.style.borderWidth = "1px";
+  canvas.style.borderStyle = "solid";
+  // document.body.appendChild(canvas);
+
   // clear canvas
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -34,15 +44,15 @@ function drawImageUrl (ctx, imageUrl, { x, y }) {
   });
 }
 
-export async function composeImage (imageUrl, width, height, angle) {
-  const canvas = getCanvas();
+export async function composeImage (imageUrl, width, height, degree) {
+  const canvas = getCanvas(true);
   const ctx = canvas.getContext("2d");
 
   canvas.width = width;
   canvas.height = height;
 
   ctx.translate(width / 2, height / 2);
-  ctx.rotate(angle * Math.PI / 180);
+  ctx.rotate(degree * Math.PI / 180);
   ctx.translate(-width / 2, -height / 2);
 
   await drawImageUrl(ctx, imageUrl, { x: 0, y: 0 });

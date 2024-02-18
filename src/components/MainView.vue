@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from "vue" ;
 import { useAppStore } from "@/store/app";
+import { getAllRotations } from "@/js/rotation";
 import { downloadBlob, compressAsZip, downloadTypes } from "@/js/download";
 import { composeImage } from "@/js/image";
 const appStore = useAppStore();
@@ -18,16 +19,19 @@ function updateRatio () {
 }
 
 async function downloadCurrentImage () {
-  const blob = composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
+  const blob = await composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
   await downloadBlob(blob, "image.png", downloadTypes.image);
 }
 
 async function downloadSeries () {
-  const imageBlob = composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
-  const files = [{
-    filename: "image1.png",
-    data: imageBlob
-  }];
+  const steps = getAllRotations();
+  const files = await Promise.all(steps.map(async (degree, index) => {
+    const imageBlob = await composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, degree);
+    return {
+      filename: `image-${index.toString().padStart(2, "0")}.png`,
+      data: imageBlob
+    };
+  }));
   const blob = await compressAsZip(files);
   await downloadBlob(blob, "images.zip", downloadTypes.zip);
 }
