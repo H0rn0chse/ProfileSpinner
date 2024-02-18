@@ -1,7 +1,8 @@
 <script setup>
 import { ref, reactive } from "vue" ;
 import { useAppStore } from "@/store/app";
-import { exportImage } from "@/js/image";
+import { downloadBlob, compressAsZip, downloadTypes } from "@/js/download";
+import { composeImage } from "@/js/image";
 const appStore = useAppStore();
 
 const image = ref(null);
@@ -16,8 +17,19 @@ function updateRatio () {
   imgSize.aspectRatio = ratio;
 }
 
-function download () {
-  exportImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
+async function downloadCurrentImage () {
+  const blob = composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
+  await downloadBlob(blob, "image.png", downloadTypes.image);
+}
+
+async function downloadSeries () {
+  const imageBlob = composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
+  const files = [{
+    filename: "image1.png",
+    data: imageBlob
+  }];
+  const blob = await compressAsZip(files);
+  await downloadBlob(blob, "images.zip", downloadTypes.zip);
 }
 
 </script>
@@ -39,11 +51,11 @@ function download () {
     <div id="btnContainer">
       <v-btn
         color="primary"
-        @click="download"
+        @click="downloadCurrentImage"
       >
         Download
       </v-btn>
-      <v-btn>
+      <v-btn @click="downloadSeries">
         Download Series
       </v-btn>
     </div>
@@ -57,13 +69,13 @@ function download () {
   flex-direction: column;
 
   padding: 1rem;
-  margin-top: 3rem;
+  padding-top: 4rem;
 }
 
 .glow {
   border: solid #48abe0 0px;
   /* border-radius: 20px; */
-  box-shadow: 0 0 500px 5px #48abe0;
+  box-shadow: 0 0 800px 50px #48abe0;
 }
 
 #imgContainer {

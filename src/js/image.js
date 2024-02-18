@@ -1,14 +1,3 @@
-/*global showSaveFilePicker*/
-
-function exportBlob (content, fileName) {
-  const a = document.createElement("a");
-  const url = URL.createObjectURL(content);
-  a.setAttribute("href", url);
-  a.setAttribute("download", fileName);
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 function canvasToBlob (canvas) {
   return new Promise((resolve) => {
     canvas.toBlob(resolve);
@@ -45,7 +34,7 @@ function drawImageUrl (ctx, imageUrl, { x, y }) {
   });
 }
 
-export async function exportImage (imageUrl, width, height, angle) {
+export async function composeImage (imageUrl, width, height, angle) {
   const canvas = getCanvas();
   const ctx = canvas.getContext("2d");
 
@@ -60,28 +49,6 @@ export async function exportImage (imageUrl, width, height, angle) {
 
   const blob = await canvasToBlob(canvas);
 
-  // only works in chrome
-  if (window.showSaveFilePicker) {
-    try {
-      const handle = await showSaveFilePicker({
-        suggestedName: "image.png",
-        types: [
-          {
-            description: "Image",
-            accept: { "image/png": [".png"] },
-          },
-        ],
-      });
-      const writable = await handle.createWritable();
-      await writable.write(blob);
-      writable.close();
-    } catch {
-      // ...
-    }
-  } else {
-    // force download
-    exportBlob(blob, "image.png");
-  }
-
+  return blob;
 }
 
