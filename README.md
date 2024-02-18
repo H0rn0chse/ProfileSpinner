@@ -3,13 +3,13 @@
 Rotate your profile picture to keep profile pictures interesting. <br>
 All data is stored locally in your browser. <br>
 
-Rotate your profile [now](https://h0rn0chse.github.io/ProfileSpinner/)!
+Rotate your profile picture [NOW](https://h0rn0chse.github.io/ProfileSpinner/)!
 
 <p align="center">
  <img src="./assets/screenshot.png" title="Editor" />
 </p>
 
-- Set steps and step size
+- Set rotation steps and step size
 - Set your starting day and get everyday your current rotation
 - Export all rotations
 
