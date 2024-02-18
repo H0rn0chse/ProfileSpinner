@@ -2,7 +2,6 @@
 import { getPersonalizationValue, setPersonalizationValue, } from "@/js/personalization";
 import { getRotation } from "@/js/rotation";
 import { clone, formatDate, parseDate } from "@/js/utils";
-import { defaultImage } from "@/store/defaultImage";
 import { defineStore } from "pinia";
 
 const dayInMs = 1000 * 60 * 60 * 24;
@@ -39,19 +38,21 @@ export const useAppStore = defineStore("app", {
     }
   },
   actions: {
-    reset () {
+    async reset () {
       this.metadata = getDefaultMetadata();
       clearMetadata();
-      this.currentImage = defaultImage;
       clearImage();
+      const { defaultImage } = await import("./defaultImage.js");
+      this.currentImage = defaultImage;
     },
     setImage (imgData) {
       this.currentImage = imgData;
       storeImage();
     },
-    removeImage () {
-      this.currentImage = defaultImage;
+    async removeImage () {
       clearImage();
+      const { defaultImage } = await import("./defaultImage.js");
+      this.currentImage = defaultImage;
     },
     setSteps (newSteps) {
       this.metadata.steps = newSteps;
@@ -93,6 +94,7 @@ export async function loadInitialData () {
   if (savedImage) {
     appStore.currentImage = savedImage;
   } else {
+    const { defaultImage } = await import("./defaultImage.js");
     appStore.currentImage = defaultImage;
   }
 
