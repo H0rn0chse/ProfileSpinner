@@ -4,6 +4,7 @@ import { useAppStore } from "@/store/app";
 import { getAllRotations } from "@/js/rotation";
 import { downloadBlob, compressAsZip, downloadTypes } from "@/js/download";
 import { composeImage } from "@/js/image";
+import { computed } from "vue";
 const appStore = useAppStore();
 
 const image = ref(null);
@@ -19,7 +20,7 @@ function updateRatio () {
 }
 
 async function downloadCurrentImage () {
-  const blob = await composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, 25);
+  const blob = await composeImage(appStore.currentImage, image.value.naturalWidth, image.value.naturalHeight, appStore.degree);
   await downloadBlob(blob, "image.png", downloadTypes.image);
 }
 
@@ -36,6 +37,12 @@ async function downloadSeries () {
   await downloadBlob(blob, "images.zip", downloadTypes.zip);
 }
 
+const imageRotation = computed(() => {
+  return {
+    transform: `rotate(${appStore.degree}deg)`
+  };
+});
+
 </script>
 
 <template>
@@ -48,7 +55,7 @@ async function downloadSeries () {
       <img
         ref="image"
         :src="appStore.currentImage"
-        :style="{ transform: 'rotate(25deg)'}"
+        :style="imageRotation"
         @load="updateRatio"
       >
     </div>

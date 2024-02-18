@@ -9,3 +9,10 @@ export function getAllRotations () {
   });
   return steps;
 }
+
+export function getRotation (step) {
+  const appStore = useAppStore();
+  const stepCount = appStore.metadata.steps;
+  const stepSize = 360 / (stepCount);
+  return step * stepSize;
+}
