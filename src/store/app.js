@@ -84,7 +84,7 @@ async function clearImage () {
 
 async function storeImage () {
   const appStore = useAppStore();
-  await setPersonalizationValue("metadata", appStore.currentImage);
+  await setPersonalizationValue("image", appStore.currentImage);
 }
 
 export async function loadInitialData () {
